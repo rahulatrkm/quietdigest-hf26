@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="A small, private reading digest powered by open-weight AI in your browser. Original quotes, not invented summaries.">
+  <title>QuietDigest | Less scrolling. Original words.</title>
+  <style>
+    :root { color-scheme: light; --ink: #24302b; --muted: #5b675f; --green: #315e42; --paper: #f4f4ec; --line: #d2d9cd; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.6 system-ui, sans-serif; }
+    button, textarea, select, input { font: inherit; }
+    button { cursor: pointer; border-radius: 9px; padding: 11px 16px; border: 1px solid var(--green); font-weight: 750; }
+    button:disabled { cursor: wait; opacity: .6; }
+    :focus-visible { outline: 3px solid #a44c2e; outline-offset: 4px; }
+    a { color: var(--green); }
+    .wrap { width: min(1050px, calc(100% - 36px)); margin: auto; }
+    header { border-bottom: 1px solid var(--line); padding: 23px 0; }
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { color: var(--ink); text-decoration: none; font-size: 1.22rem; font-weight: 850; letter-spacing: -.04em; }
+    .tag { font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 750; }
+    .hero { padding: 46px 0 28px; max-width: 800px; }
+    .hero .tag { color: var(--green); }
+    h1 { font-size: clamp(2.3rem, 5vw, 4rem); letter-spacing: -.055em; line-height: 1.08; margin: 14px 0 22px; }
+    h2 { letter-spacing: -.03em; line-height: 1.25; margin: 0 0 14px; font-size: 1.5rem; }
+    p { margin: 0 0 16px; }
+    .lede { color: var(--muted); font-size: 1.1rem; max-width: 700px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, .8fr); gap: 22px; align-items: start; }
+    .panel { padding: 26px; background: white; border: 1px solid var(--line); border-radius: 18px; }
+    label { display: block; font-weight: 750; margin-bottom: 7px; }
+    textarea, select, input[type="file"] { width: 100%; border: 1px solid #7e9181; border-radius: 9px; padding: 11px; color: var(--ink); background: white; }
+    textarea { min-height: 275px; resize: vertical; }
+    .hint { color: var(--muted); font-size: .85rem; margin: 7px 0 16px; }
+    .settings { display: grid; grid-template-columns: 1fr .55fr; gap: 14px; margin-top: 18px; }
+    .settings label { font-size: .9rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 14px; }
+    .primary { color: white; background: var(--green); }
+    .secondary { color: var(--green); background: white; }
+    .privacy { padding: 14px; border-radius: 10px; background: #edf3e9; font-size: .85rem; }
+    .status { margin: 16px 0 0; color: var(--muted); font-size: .9rem; min-height: 28px; overflow-wrap: anywhere; }
+    progress { width: 100%; accent-color: var(--green); }
+    .error { color: #8a2921; background: #fff0e9; border: 1px solid #d8a397; padding: 13px; border-radius: 9px; margin-top: 14px; overflow-wrap: anywhere; }
+    .steps { padding-left: 21px; margin: 18px 0 24px; }
+    .steps li { margin: 12px 0; }
+    .aside-note { color: var(--muted); font-size: .9rem; padding-top: 16px; border-top: 1px solid var(--line); }
+    .result { margin: 30px 0; }
+    .result-top { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; align-items: start; }
+    #digest { display: grid; gap: 14px; padding: 0; list-style: none; margin: 20px 0; counter-reset: quote; }
+    #digest li { background: #f7f8f2; padding: 18px; border-radius: 11px; border: 1px solid var(--line); }
+    blockquote { margin: 0 0 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .source { font: .78rem/1.5 ui-monospace, monospace; color: var(--muted); }
+    details { padding: 22px; margin: 25px 0; border: 1px solid var(--line); border-radius: 12px; }
+    summary { font-weight: 750; cursor: pointer; }
+    #sources { margin-top: 20px; padding-left: 25px; }
+    #sources li { padding: 8px 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+    footer { padding: 10px 0 32px; color: var(--muted); font-size: .84rem; }
+    [hidden] { display: none !important; }
+    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .hero { padding-top: 32px; } }
+    @media (max-width: 430px) { .wrap { width: calc(100% - 24px); } .panel { padding: 20px; } .settings { grid-template-columns: 1fr; } nav .tag { font-size: .63rem; } }
+  </style>
+</head>
+<body>
+  <header><nav class="wrap" aria-label="Main"><a class="brand" href="./">QuietDigest /</a><span class="tag">Local AI. Original words.</span></nav></header>
+  <main class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <p class="tag">For the thread you keep putting off</p>
+      <h1 id="title">Less scrolling.<br>Not more made-up words.</h1>
+      <p class="lede">Paste a handoff, meeting notes, or a long thread. Open-weight AI picks a few useful sentences. You get the original quotes and their sources, not a generated story.</p>
+    </section>
+    <div class="layout">
+      <section class="panel" aria-labelledby="input-title">
+        <h2 id="input-title">What can you skip reading twice?</h2>
+        <form id="form" novalidate>
+          <label for="notes">Notes or conversation</label>
+          <textarea id="notes" maxlength="16000" aria-describedby="notes-hint" placeholder="Paste a focused English-language thread or meeting notes..." required></textarea>
+          <p id="notes-hint" class="hint">40-16,000 characters; 3-80 distinct sentences of at least 12 characters. Prefer focused English-language notes, not credentials or complete chat archives.</p>
+          <label for="file">Or open a local text file</label>
+          <input id="file" type="file" accept=".txt,.md,text/plain,text/markdown">
+          <p class="hint">UTF-8 text only, up to 48 KB. Opening a file replaces the input in this tab only.</p>
+          <div class="settings">
+            <div><label for="focus">Look for</label><select id="focus"><option value="decisions">Decisions and next steps</option><option value="risks">Risks and blockers</option><option value="overview">General overview</option></select></div>
+            <div><label for="count">Digest size</label><select id="count"><option value="3">3 quotes</option><option value="5">5 quotes</option><option value="7">7 quotes</option></select></div>
+          </div>
+          <div class="actions"><button id="analyze" class="primary" type="submit">Make a quiet digest</button><button id="sample" class="secondary" type="button">Try sample notes</button><button id="clear" class="secondary" type="button">Clear notes</button></div>
+          <div class="privacy"><strong>The notes stay in this tab.</strong> First use downloads a public AI library and model from jsDelivr and Hugging Face. Inference runs on your device. No account, API key, analytics, or notes storage.</div>
+          <p id="status" class="status" role="status">Ready. The model loads only when you request a digest.</p>
+          <progress id="progress" aria-label="Public AI asset download" hidden></progress>
+          <div id="error" class="error" role="alert" tabindex="-1" hidden></div>
+        </form>
+      </section>
+      <aside class="panel" aria-labelledby="approach-title">
+        <p class="tag">Slow and steady, on purpose</p><h2 id="approach-title">A reading shortcut.<br>Not an autonomous decision.</h2>
+        <ol class="steps"><li><strong>Find the meaning.</strong> MiniLM embeds your sentences and the selected focus locally.</li><li><strong>Reduce repetition.</strong> A transparent relevance-and-novelty rule chooses different useful quotes.</li><li><strong>Keep the receipts.</strong> Every quote points back to the full source. Nothing is rewritten or sent automatically.</li></ol>
+        <p class="aside-note">This is extractive selection, not generative summarization. It can miss nuance, important outliers, or a negation. Read the source before making a decision. No claim of complete coverage or professional advice.</p>
+      </aside>
+    </div>
+    <section id="result" class="panel result" aria-labelledby="result-title" hidden>
+      <div class="result-top"><div><p class="tag">Your shorter reading queue</p><h2 id="result-title" tabindex="-1">Selected original quotes</h2></div><button id="download" class="primary" type="button">Download digest (.txt)</button></div>
+      <p id="scope" class="hint"></p>
+      <ol id="digest"></ol>
+      <p class="hint">Similarity is not confidence. Selection uses 80% focus relevance minus 20% overlap with previously selected quotes. Quotes appear in source order for readability.</p>
+      <details><summary>Read every source sentence</summary><ol id="sources"></ol></details>
+    </section>
+    <details><summary>What runs locally, and what does not?</summary><p style="margin-top:16px">Transformers.js 3.8.1 runs the quantized all-MiniLM-L6-v2 model on CPU through WebAssembly. A cold start downloads public assets, often tens of MB, so internet access is initially required. Once loaded, the open tab can run inference offline; a fresh reload is not guaranteed to work offline.</p><p>The model revision is pinned. Notes never go to an inference API or local storage. Public asset providers still see ordinary network metadata. An explicit digest download creates a local file containing your selected quotes.</p><p>Long sentences exceeding the model's 256-token limit are rejected with an actionable error rather than silently truncated. Identical sentences, ignoring whitespace and case, are deduplicated before inference. Sentences shorter than 12 characters are omitted and counted in the report.</p></details>
+  </main>
+  <footer class="wrap"><p>Original app: MIT. Model: <a href="https://huggingface.co/Xenova/all-MiniLM-L6-v2">all-MiniLM-L6-v2</a> (Apache-2.0). Inference: <a href="https://github.com/huggingface/transformers.js">Transformers.js</a> (Apache-2.0), ONNX Runtime (MIT).</p><p>New build for Hacktoberfest 2026 Week 3: Slow and Steady. AI-assisted implementation; no paying-user or prize claims.</p></footer>
+  <script type="module">
+    const MODEL = "Xenova/all-MiniLM-L6-v2";
+    const REVISION = "751bff37182d3f1213fa05d7196b954e230abad9";
+    const LIBRARY = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js";
+    const FOCUS = {
+      decisions: { label: "Decisions and next steps", query: "Important decisions, commitments, concrete action items, next steps and deadlines." },
+      risks: { label: "Risks and blockers", query: "Important risks, problems, blockers, failures and obstacles that may prevent this project from succeeding." },
+      overview: { label: "General overview", query: "The main subject, purpose and most important details of this conversation or project." }
+    };
+    const SAMPLE = [
+      "We agreed to ship the CSV export on Friday, provided the accessibility review passes.",
+      "Maya will finish the keyboard navigation checks before Thursday afternoon.",
+      "The biggest release blocker is an expired signing certificate that must be renewed before deployment.",
+      "Shipping without renewing that certificate risks a broken installer and a delayed release.",
+      "The team decided to keep the existing data format so current integrations continue to work.",
+      "Leo will update the migration guide and send the final download link to support on Friday.",
+      "The coffee machine on the second floor is working again after its repair.",
+      "Several people prefer the quiet room for lunch because the kitchen is noisy.",
+      "A failed accessibility check means we postpone the release instead of making an exception.",
+      "Please keep the release checklist with the build artifacts so support can trace each decision."
+    ].join("\n");
+    const $ = (id) => document.getElementById(id);
+    const form = $("form");
+    const notes = $("notes");
+    let modelPromise = null;
+    let busy = false;
+    let exported = "";
+    let sourceSnapshot = "";
+
+    function reset() {
+      $("result").hidden = true;
+      $("digest").replaceChildren();
+      $("sources").replaceChildren();
+      $("download").disabled = true;
+      exported = "";
+      sourceSnapshot = "";
+    }
+    function clearError() {
+      $("error").hidden = true;
+      $("error").textContent = "";
+    }
+    function fail(message) {
+      $("error").textContent = message;
+      $("error").hidden = false;
+      $("error").focus();
+    }
+    function setBusy(value) {
+      busy = value;
+      for (const id of ["analyze", "sample", "clear", "focus", "count", "file"]) $(id).disabled = value;
+      notes.readOnly = value;
+      $("progress").hidden = !value;
+      if (value) $("progress").removeAttribute("value");
+      form.setAttribute("aria-busy", String(value));
+    }
+    function segment(text) {
+      if (typeof Intl.Segmenter !== "function") throw new Error("This browser needs Intl.Segmenter support. Use a recent Edge, Chrome or Firefox.");
+      const segmenter = new Intl.Segmenter("en", { granularity: "sentence" });
+      const items = [];
+      const seen = new Set();
+      let short = 0;
+      let duplicates = 0;
+      for (const [lineIndex, line] of text.split(/\r?\n/).entries()) {
+        for (const part of segmenter.segment(line)) {
+          const original = part.segment.trim();
+          if (!original) continue;
+          if (original.length < 12) { short++; continue; }
+          const key = original.toLocaleLowerCase("en").replace(/\s+/g, " ");
+          if (seen.has(key)) { duplicates++; continue; }
+          seen.add(key);
+          items.push({ text: original, line: lineIndex + 1, source: items.length + 1 });
+        }
+      }
+      if (items.length < 3 || items.length > 80) throw new Error("Provide 3-80 distinct sentences of at least 12 characters. Split a large archive into a focused thread.");
+      return { items, short, duplicates };
+    }
+    function options() {
+      const focus = FOCUS[$("focus").value];
+      const count = Number($("count").value);
+      if (!focus || ![3, 5, 7].includes(count)) throw new Error("Choose one of the supported focus modes and digest sizes.");
+      return { focus, count };
+    }
+    async function loadModel() {
+      if (!modelPromise) {
+        modelPromise = (async () => {
+          $("status").textContent = "Loading the public model and inference runtime. Your notes are not part of these requests.";
+          const { pipeline, env } = await import(LIBRARY);
+          env.allowLocalModels = false;
+          env.backends.onnx.wasm.numThreads = 1;
+          return pipeline("feature-extraction", MODEL, {
+            revision: REVISION, dtype: "q8", device: "wasm",
+            progress_callback: (event) => {
+              if (event.status === "progress" && Number.isFinite(event.progress)) {
+                $("progress").max = 100;
+                $("progress").value = Math.max(0, Math.min(100, event.progress));
+                $("status").textContent = "Downloading " + event.file + ": " + Math.round(event.progress) + "%";
+              }
+            }
+          });
+        })();
+      }
+      try {
+        return await modelPromise;
+      } catch (error) {
+        modelPromise = null;
+        throw error;
+      }
+    }
+    function cosine(left, right) {
+      return Math.max(-1, Math.min(1, left.reduce((total, value, i) => total + value * right[i], 0)));
+    }
+    function choose(items, vectors, query, count) {
+      const relevance = vectors.map((vector) => cosine(vector, query));
+      const selected = [];
+      const remaining = new Set(items.map((_, i) => i));
+      while (selected.length < Math.min(count, items.length)) {
+        let best = -1;
+        let bestScore = -Infinity;
+        for (const index of remaining) {
+          const overlap = selected.length ? Math.max(...selected.map((other) => cosine(vectors[index], vectors[other]))) : 0;
+          const score = 0.8 * relevance[index] - 0.2 * overlap;
+          if (score > bestScore) { best = index; bestScore = score; }
+        }
+        if (best < 0) throw new Error("The selection algorithm did not produce the requested finite result.");
+        selected.push(best);
+        remaining.delete(best);
+      }
+      return selected.sort((a, b) => a - b).map((index) => ({ ...items[index], relevance: relevance[index] }));
+    }
+    function render(result, source, config, text, elapsed) {
+      const quoteNodes = result.map((item) => {
+        const row = document.createElement("li");
+        row.dataset.source = String(item.source);
+        const quote = document.createElement("blockquote");
+        quote.textContent = item.text;
+        const label = document.createElement("div");
+        label.className = "source";
+        label.textContent = "Source sentence " + item.source + " | original line " + item.line + " | focus cosine " + item.relevance.toFixed(3);
+        row.append(quote, label);
+        return row;
+      });
+      $("digest").replaceChildren(...quoteNodes);
+      $("sources").replaceChildren(...source.items.map((item) => {
+        const row = document.createElement("li");
+        row.textContent = item.text;
+        return row;
+      }));
+      $("scope").textContent = result.length + " original quotes from " + source.items.length + " distinct sentences. Focus: " + config.focus.label +
+        ". Omitted short fragments: " + source.short + "; repeated sentences: " + source.duplicates +
+        ". Requested " + config.count + " quotes" + (result.length < config.count ? "; limited to the available distinct sentences." : ".");
+      exported = [
+        "QUIETDIGEST - ORIGINAL QUOTES, HUMAN REVIEW REQUIRED",
+        "Focus: " + config.focus.label,
+        "Selected: " + result.length + " of " + source.items.length + " distinct sentences",
+        "Model: " + MODEL + " at " + REVISION,
+        "",
+        ...result.flatMap((item) => ["[Source " + item.source + "; original line " + item.line + "]", item.text, ""]),
+        "These are selected source quotes, not generated facts or a complete record.",
+        "Read the original notes before making a decision. No messages were sent."
+      ].join("\n");
+      sourceSnapshot = text;
+      $("result").hidden = false;
+      $("download").disabled = false;
+      $("status").textContent = result.length + " original quotes selected locally in " + elapsed.toFixed(2) + "s. Your notes were not uploaded.";
+      $("result-title").focus();
+    }
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (busy) return;
+      clearError();
+      reset();
+      const text = notes.value.trim();
+      let source;
+      let config;
+      try {
+        if (text.length < 40 || text.length > 16000) throw new Error("Enter 40-16,000 characters of focused notes.");
+        config = options();
+        source = segment(text);
+      } catch (error) {
+        fail(error.message);
+        return;
+      }
+      setBusy(true);
+      try {
+        const model = await loadModel();
+        $("status").textContent = "Embedding and selecting sentences on your device...";
+        const started = performance.now();
+        const texts = [config.focus.query, ...source.items.map((item) => item.text)];
+        const tokens = await model.tokenizer(texts, { padding: true, truncation: false });
+        if (!Array.isArray(tokens.input_ids.dims) || tokens.input_ids.dims.length !== 2) throw new Error("The tokenizer returned an unexpected shape.");
+        if (tokens.input_ids.dims[1] > 256) throw new Error("A sentence exceeds the model's 256-token limit. Split long sentences and retry; no silent truncation was used.");
+        const output = await model(texts, { pooling: "mean", normalize: true });
+        const vectors = output.tolist();
+        if (!Array.isArray(vectors) || vectors.length !== texts.length || vectors.some((vector) =>
+          !Array.isArray(vector) || vector.length !== 384 || vector.some((value) => !Number.isFinite(value)) ||
+          Math.abs(vector.reduce((sum, value) => sum + value * value, 0) - 1) > 0.001)) {
+          throw new Error("The model returned invalid or non-normalized 384-dimensional embeddings.");
+        }
+        const result = choose(source.items, vectors.slice(1), vectors[0], config.count);
+        render(result, source, config, text, (performance.now() - started) / 1000);
+      } catch (error) {
+        console.error("QuietDigest local analysis failed:", error);
+        reset();
+        $("status").textContent = "Analysis failed. No fabricated or substitute digest was created.";
+        fail("Local analysis failed: " + error.message + " If public asset downloads failed, restore your connection and reload this page.");
+      } finally {
+        setBusy(false);
+      }
+    });
+    function changed() {
+      reset();
+      clearError();
+      $("status").textContent = "Input or focus changed. Request a new digest before exporting.";
+    }
+    notes.addEventListener("input", changed);
+    $("focus").addEventListener("change", changed);
+    $("count").addEventListener("change", changed);
+    $("sample").addEventListener("click", () => { notes.value = SAMPLE; form.requestSubmit(); });
+    $("clear").addEventListener("click", () => { notes.value = ""; $("file").value = ""; changed(); notes.focus(); });
+    $("file").addEventListener("change", async () => {
+      const file = $("file").files[0];
+      if (!file || busy) return;
+      reset();
+      clearError();
+      setBusy(true);
+      try {
+        if (file.size > 48 * 1024) throw new Error("Choose a text file of at most 48 KB.");
+        const text = new TextDecoder("utf-8", { fatal: true }).decode(await file.arrayBuffer());
+        if (text.length > 16000) throw new Error("The file exceeds the 16,000-character limit. Select a focused excerpt.");
+        notes.value = text;
+        $("status").textContent = "Local text opened in this tab only. Review it and request a digest.";
+      } catch (error) {
+        console.error("QuietDigest local file read failed:", error);
+        $("status").textContent = "File not loaded. Existing notes were preserved.";
+        fail(error.message);
+      } finally {
+        $("file").value = "";
+        setBusy(false);
+      }
+    });
+    $("download").addEventListener("click", () => {
+      try {
+        options();
+        if (!exported || notes.value.trim() !== sourceSnapshot) throw new Error("Request a new digest of the current notes before downloading.");
+        const url = URL.createObjectURL(new Blob([exported], { type: "text/plain;charset=utf-8" }));
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "quietdigest.txt";
+        link.hidden = true;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        $("status").textContent = "Digest download requested. Review the original notes before acting on the selected quotes.";
+      } catch (error) {
+        fail(error.message);
+      }
+    });
+    reset();
+  </script>
+</body>
+</html>
